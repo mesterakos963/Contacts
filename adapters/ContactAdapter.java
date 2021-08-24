@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -70,11 +69,17 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void bind(Contact contact, ItemClickListener itemClickListener){
             name.setText(contact.getName().getFullName());
             email.setText(contact.getEmail());
-            address.setText(contact.getLocation().getCity() + ", " + contact.getLocation().getStreet().getName() + " " + contact.getLocation().getStreet().getNumber());
+            address.setText(contact.getLocation().getFullAddress());
             Glide.with(image.getContext())
                     .load(contact.getPicture().getLarge())
                     .into(image);
-            itemView.setOnClickListener(view -> itemClickListener.onItemClick(contact));
+            itemView.setOnClickListener(view -> {
+                try {
+                    itemClickListener.onItemClick(contact);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 }

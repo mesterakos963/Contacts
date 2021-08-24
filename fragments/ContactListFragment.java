@@ -1,12 +1,14 @@
-package codeyard.contacts.activities;
+package codeyard.contacts.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +18,6 @@ import java.util.List;
 import codeyard.contacts.R;
 import codeyard.contacts.adapters.ApiClient;
 import codeyard.contacts.adapters.ContactAdapter;
-
 import codeyard.contacts.adapters.ContactsResponse;
 import codeyard.contacts.data.contact.Contact;
 import codeyard.contacts.interfaces.ContactsInterface;
@@ -25,38 +26,54 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends Activity implements ItemClickListener {
+public class ContactListFragment extends Fragment implements ItemClickListener {
 
-    private List<Contact> contactList;
-    private RecyclerView recyclerView;
-    public static String CONTACT_EXTRA;
     private ContactsInterface contactsInterface;
+    private RecyclerView recyclerView;
 
     ContactAdapter adapter;
 
     RecyclerView.LayoutManager layoutManager;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.contact_list_activity);
         contactsInterface = ApiClient.getClient().create(ContactsInterface.class);
-        adapter = new ContactAdapter(this, new ArrayList<>(), this);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView = findViewById(R.id.recyclerView);
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_contact_list, null);
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new ContactAdapter(requireContext(), new ArrayList<>(), this);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView = requireActivity().findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        getData();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onItemClick(Contact contact) {
+        if (getActivity() != null) {
+            NavDirections action =
+                    ContactListFragmentDirections.actionContactListFragmentToContactDetailsFragment(contact);
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(action);
+        }
+    }
+
+    public void getData() {
         Call<ContactsResponse> call = contactsInterface.listContact(20);
         call.enqueue(new Callback<ContactsResponse>() {
+
             @Override
             public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
                 if (response.body() != null) {
-                    contactList = response.body().getResults();
+                    List<Contact> contactList = response.body().getResults();
                     adapter.update(contactList);
                 }
             }
@@ -66,12 +83,5 @@ public class MainActivity extends Activity implements ItemClickListener {
                 call.cancel();
             }
         });
-    }
-
-    @Override
-    public void onItemClick(Contact contact) {
-        Intent intent = new Intent(this, ContactDetailsActivity.class);
-        intent.putExtra(CONTACT_EXTRA, contact);
-        startActivity(intent);
     }
 }

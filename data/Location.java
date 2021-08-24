@@ -36,6 +36,6 @@ public class Location implements Serializable {
     }
 
     public String getFullAddress() {
-        return city + ", " + street;
+        return getCity() + ", " + getStreet().getName() + " " + getStreet().getNumber();
     }
 }
