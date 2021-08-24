@@ -8,7 +8,7 @@ public class Picture implements Serializable {
     String thumbnail;
 
     public Picture(String url){
-        this.thumbnail = url;
+        this.large = url;
     }
 
     public String getLarge() {

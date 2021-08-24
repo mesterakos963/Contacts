@@ -4,19 +4,14 @@ package codeyard.contacts.data;
 import java.io.Serializable;
 
 public class Location implements Serializable {
-    String street;
+    Street street;
     String city;
     String state;
     String postcode;
     Coordinate coordinate;
     TimeZone timeZone;
 
-    public Location(String city, String street) {
-        this.city = city;
-        this.street = street;
-    }
-
-    public String getStreet() {
+    public Street getStreet() {
         return street;
     }
 

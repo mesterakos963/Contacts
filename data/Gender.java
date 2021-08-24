@@ -1,10 +1,12 @@
 package codeyard.contacts.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
-public class Gender implements Serializable {
-    private enum gender {
+public enum Gender implements Serializable {
+        @SerializedName("male")
         MALE,
+        @SerializedName("female")
         FEMALE
-    }
 }

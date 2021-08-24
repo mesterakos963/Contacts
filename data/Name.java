@@ -1,10 +1,14 @@
 package codeyard.contacts.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Name implements Serializable {
     String title;
+    @SerializedName("first")
     String firstName;
+    @SerializedName("last")
     String lastName;
 
     public Name(String title, String firstName, String lastName){

@@ -47,6 +47,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((ContactViewHolder) holder).bind(contact, itemClickListener);
     }
 
+    public void update(List<Contact> contactList) {
+        contacts = contactList;
+        notifyDataSetChanged();
+    }
+
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView name;
@@ -65,9 +70,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void bind(Contact contact, ItemClickListener itemClickListener){
             name.setText(contact.getName().getFullName());
             email.setText(contact.getEmail());
-            address.setText(contact.getLocation().getFullAddress());
+            address.setText(contact.getLocation().getCity() + ", " + contact.getLocation().getStreet().getName() + " " + contact.getLocation().getStreet().getNumber());
             Glide.with(image.getContext())
-                    .load(contact.getPicture().getThumbnail())
+                    .load(contact.getPicture().getLarge())
                     .into(image);
             itemView.setOnClickListener(view -> itemClickListener.onItemClick(contact));
         }

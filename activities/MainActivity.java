@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,18 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import codeyard.contacts.R;
+import codeyard.contacts.adapters.ApiClient;
 import codeyard.contacts.adapters.ContactAdapter;
-import codeyard.contacts.data.Location;
-import codeyard.contacts.data.Name;
-import codeyard.contacts.data.Picture;
+
+import codeyard.contacts.adapters.ContactsResponse;
 import codeyard.contacts.data.contact.Contact;
+import codeyard.contacts.interfaces.ContactsInterface;
 import codeyard.contacts.interfaces.ItemClickListener;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends Activity implements ItemClickListener {
 
-    private List<Contact> contactList = new ArrayList<>();
+    private List<Contact> contactList;
     private RecyclerView recyclerView;
-    private ItemClickListener itemClickListener;
+    public static String CONTACT_EXTRA;
+    private ContactsInterface contactsInterface;
 
     ContactAdapter adapter;
 
@@ -34,54 +40,38 @@ public class MainActivity extends Activity implements ItemClickListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_list_activity);
-        populateList();
-        adapter = new ContactAdapter(this, contactList, this);
+        contactsInterface = ApiClient.getClient().create(ContactsInterface.class);
+        adapter = new ContactAdapter(this, new ArrayList<>(), this);
         layoutManager = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
-    private void populateList() {
-        Name name = new Name(null, "Ross", "Reynolds");
-        Location location = new Location("Kilcoole", "New Road");
-        Picture picture = new Picture("https://randomuser.me/api/portraits/men/37.jpg");
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Call<ContactsResponse> call = contactsInterface.listContact(20);
+        call.enqueue(new Callback<ContactsResponse>() {
+            @Override
+            public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
+                if (response.body() != null) {
+                    contactList = response.body().getResults();
+                    adapter.update(contactList);
+                }
+            }
 
-        Contact contact1 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact2 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact3 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact4 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact5 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact6 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact7 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact8 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact9 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact10 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact11 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact12 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact13 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact14 = new Contact(name, "ross.reynold@random.com", location, picture);
-        Contact contact15 = new Contact(name, "ross.reynold@random.com", location, picture);
-
-        contactList.add(contact1);
-        contactList.add(contact2);
-        contactList.add(contact3);
-        contactList.add(contact4);
-        contactList.add(contact5);
-        contactList.add(contact6);
-        contactList.add(contact7);
-        contactList.add(contact8);
-        contactList.add(contact9);
-        contactList.add(contact10);
-        contactList.add(contact11);
-        contactList.add(contact12);
-        contactList.add(contact13);
-        contactList.add(contact14);
-        contactList.add(contact15);
+            @Override
+            public void onFailure(Call<ContactsResponse> call, Throwable t) {
+                call.cancel();
+            }
+        });
     }
 
     @Override
     public void onItemClick(Contact contact) {
-        Intent intent = new Intent(this, )
+        Intent intent = new Intent(this, ContactDetailsActivity.class);
+        intent.putExtra(CONTACT_EXTRA, contact);
+        startActivity(intent);
     }
 }
