@@ -17,6 +17,7 @@ import codeyard.contacts.R;
 import codeyard.contacts.data.contact.Contact;
 
 public class ContactDetailsFragment extends Fragment {
+
     Contact contact;
     ImageView image;
     TextView name;
