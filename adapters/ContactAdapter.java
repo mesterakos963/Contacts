@@ -72,6 +72,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             address.setText(contact.getLocation().getFullAddress());
             Glide.with(image.getContext())
                     .load(contact.getPicture().getLarge())
+                    .placeholder(R.drawable.image_loading)
+                    .fallback(R.drawable.image_loading)
                     .into(image);
             itemView.setOnClickListener(view -> {
                 try {

@@ -1,25 +1,29 @@
 package codeyard.contacts.adapters;
 
+import org.androidannotations.annotations.EBean;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@EBean(scope = EBean.Scope.Singleton)
 public class ApiClient {
-    private static Retrofit retrofit = null;
+    private Retrofit retrofit;
 
-    public static Retrofit getClient() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    public Retrofit getClient() {
+        if (retrofit == null) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://randomuser.me")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("https://randomuser.me")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+        }
 
         return retrofit;
     }
-
 }
