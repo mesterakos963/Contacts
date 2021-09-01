@@ -40,6 +40,7 @@ public class ContactListFragment extends Fragment implements ItemClickListener {
 
     ContactAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
+    Throwable throwable;
 
     @ViewById
     CoordinatorLayout recyclerViewContainer;
@@ -95,13 +96,16 @@ public class ContactListFragment extends Fragment implements ItemClickListener {
 
     public void observeError() {
         contactListViewModel.getError().observe(this, throwable -> {
-            loading.cancelAnimation();
-            hasToRefresh = true;
-            loading.setAnimation(R.raw.loading_error);
-            loading.playAnimation();
-            String msg = getContext().getString(R.string.errorMsg, throwable.getLocalizedMessage());
-            Snackbar snackbar = Snackbar.make(recyclerViewContainer, msg, errorMessageDuration);
-            snackbar.show();
+            if(throwable != this.throwable) {
+                loading.cancelAnimation();
+                hasToRefresh = true;
+                loading.setAnimation(R.raw.loading_error);
+                loading.playAnimation();
+                String msg = getContext().getString(R.string.errorMsg, throwable.getLocalizedMessage());
+                Snackbar snackbar = Snackbar.make(recyclerViewContainer, msg, errorMessageDuration);
+                snackbar.show();
+            }
+            this.throwable = throwable;
         });
     }
 

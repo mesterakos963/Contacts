@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @EBean(scope = EBean.Scope.Singleton)
 public class ApiClient {
     private Retrofit retrofit;
-    private final String baseUrl = "https://randomuser.me";
+    private static final String BASE_URL = "https://randomuser.me";
 
     public Retrofit getClient() {
         if (retrofit == null) {
@@ -19,7 +19,7 @@ public class ApiClient {
             OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
+                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

@@ -5,7 +5,7 @@ import org.androidannotations.annotations.EBean;
 
 import codeyard.contacts.adapters.ApiClient;
 import codeyard.contacts.adapters.ContactsResponse;
-import codeyard.contacts.interfaces.ContactsInterface;
+import codeyard.contacts.interfaces.ContactService;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -15,13 +15,13 @@ public class ContactRepository {
     @Bean
     ApiClient apiClient;
 
-    ContactsInterface contactsInterface;
+    ContactService contactService;
 
     public void getData(Callback<ContactsResponse> callback) {
-        if (contactsInterface == null) {
-            contactsInterface = apiClient.getClient().create(ContactsInterface.class);
+        if (contactService == null) {
+            contactService = apiClient.getClient().create(ContactService.class);
         }
-        Call<ContactsResponse> call = contactsInterface.listContact(20);
+        Call<ContactsResponse> call = contactService.listContact(20);
         call.enqueue(callback);
     }
 }
