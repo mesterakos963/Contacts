@@ -11,7 +11,7 @@ public class Name implements Serializable {
     @SerializedName("last")
     String lastName;
 
-    public Name(String title, String firstName, String lastName){
+    public Name(String title, String firstName, String lastName) {
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,7 +32,9 @@ public class Name implements Serializable {
     public String getFullName() {
         if (title == null) {
             return firstName + " " + lastName;
-        } else { return title + " " + firstName + " " + lastName; }
+        } else {
+            return title + " " + firstName + " " + lastName;
+        }
 
     }
 }

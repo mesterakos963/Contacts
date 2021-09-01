@@ -13,7 +13,9 @@ public class ContactDetailsViewModel extends ViewModel {
 
     private MutableLiveData<Contact> contactDetail = new MutableLiveData<>();
 
-    public LiveData<Contact> getContactDetail() { return contactDetail; }
+    public LiveData<Contact> getContactDetail() {
+        return contactDetail;
+    }
 
     public void setContactDetail(Contact contact) {
         contactDetail.setValue(contact);

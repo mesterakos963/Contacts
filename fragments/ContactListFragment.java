@@ -52,7 +52,7 @@ public class ContactListFragment extends Fragment implements ItemClickListener {
 
     @AfterViews
     void init() {
-        recyclerViewContainer.setPadding(0,getStatusBarHeight(requireContext()), 0, 0);
+        recyclerViewContainer.setPadding(0, getStatusBarHeight(requireContext()), 0, 0);
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new ContactAdapter(requireContext(), new ArrayList<>(), this);
         recyclerView.setLayoutManager(layoutManager);
@@ -68,7 +68,7 @@ public class ContactListFragment extends Fragment implements ItemClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        if(hasToRefresh) {
+        if (hasToRefresh) {
             contactListViewModel.fetchContacts();
             hasToRefresh = false;
             loading.cancelAnimation();
@@ -105,7 +105,7 @@ public class ContactListFragment extends Fragment implements ItemClickListener {
         });
     }
 
-    public int getStatusBarHeight(final Context context) {
+    public int getStatusBarHeight(Context context) {
         final Resources resources = context.getResources();
         final int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0)

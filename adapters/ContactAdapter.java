@@ -67,21 +67,23 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         public void bind(Contact contact, ItemClickListener itemClickListener){
-            name.setText(contact.getName().getFullName());
-            email.setText(contact.getEmail());
-            address.setText(contact.getLocation().getFullAddress());
-            Glide.with(image.getContext())
-                    .load(contact.getPicture().getLarge())
-                    .placeholder(R.drawable.image_loading)
-                    .fallback(R.drawable.image_loading)
-                    .into(image);
-            itemView.setOnClickListener(view -> {
-                try {
-                    itemClickListener.onItemClick(contact);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            if(itemView.getContext() != null) {
+                name.setText(contact.getName().getFullName());
+                email.setText(contact.getEmail());
+                address.setText(contact.getLocation().getFullAddress());
+                Glide.with(image.getContext())
+                        .load(contact.getPicture().getLarge())
+                        .placeholder(R.drawable.image_loading)
+                        .fallback(R.drawable.image_loading)
+                        .into(image);
+                itemView.setOnClickListener(view -> {
+                    try {
+                        itemClickListener.onItemClick(contact);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
         }
     }
 }

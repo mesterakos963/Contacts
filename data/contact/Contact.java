@@ -24,7 +24,7 @@ public class Contact implements Serializable {
     String nat;
     Location location;
 
-    public Contact(Name name, String email, Location location, Picture picture){
+    public Contact(Name name, String email, Location location, Picture picture) {
         this.name = name;
         this.email = email;
         this.location = location;
@@ -71,7 +71,9 @@ public class Contact implements Serializable {
         return picture;
     }
 
-    public Location getLocation() {return location; }
+    public Location getLocation() {
+        return location;
+    }
 
     public String getNat() {
         return nat;
