@@ -91,8 +91,7 @@ public class ContactDetailsFragment extends Fragment {
             Glide.with(userImage.getContext())
                     .load(contact.getPicture().getLarge())
                     .into(userImage);
-            monogram.bindMonogram(contact.getName().getFullName());
-            monogram.bindGender(contact.getGender());
+            monogram.bind(contact);
         }
     }
 
